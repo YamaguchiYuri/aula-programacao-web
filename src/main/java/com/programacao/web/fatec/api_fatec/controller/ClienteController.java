@@ -25,9 +25,9 @@ public class ClienteController {
     private final List<Cliente> listaDeCliente = new ArrayList<>();
     
     public ClienteController(){
-        listaDeCliente.add(new Cliente(1, "Coisinho"));
+        listaDeCliente.add(new Cliente(1L, "Coisinho","rua"));
         Cliente cliente2 = new Cliente();
-        cliente2.setId(2);
+        cliente2.setId(2L);
         cliente2.setNome("Shin");
         listaDeCliente.add(cliente2);
 
@@ -53,7 +53,7 @@ public class ClienteController {
         return cliente;
     }
     @DeleteMapping("/{id}")
-    public String deletarCliente(@PathVariable int id){
+    public String deletarCliente(@PathVariable Long id){
 
         for (Cliente cliente : listaDeCliente){
             if(cliente.getId()==id){
@@ -65,7 +65,7 @@ public class ClienteController {
     }
 
     @PutMapping("/{id}")
-    public String atualizarCliente(@PathVariable int id, @RequestBody Cliente entity) {
+    public String atualizarCliente(@PathVariable Long id, @RequestBody Cliente entity) {
         for (Cliente cliente : listaDeCliente){
             if(cliente.getId()==id){
                 cliente.setId(id);

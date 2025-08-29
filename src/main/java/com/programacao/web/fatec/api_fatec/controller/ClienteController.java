@@ -2,11 +2,15 @@ package com.programacao.web.fatec.api_fatec.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.programacao.web.fatec.api_fatec.domain.cliente.ClienteRepository;
 import com.programacao.web.fatec.api_fatec.entities.Cliente;
+
+import jakarta.annotation.PostConstruct;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +28,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 public class ClienteController {
     private final List<Cliente> listaDeCliente = new ArrayList<>();
     
+    @Autowired
+    private ClienteRepository clienteRepository;
+
     public ClienteController(){
         listaDeCliente.add(new Cliente(1L, "Coisinho","rua"));
         Cliente cliente2 = new Cliente();
@@ -41,39 +48,77 @@ public class ClienteController {
     public String testeCliente2(@PathVariable String nome) {
         return nome;
     }
+
+    @PostConstruct()
+    public void dadosIniciais(){
+        clienteRepository.save(new Cliente(null, "Yuri", "rua aaaa"));
+        clienteRepository.save(new Cliente(null, "Pessoa 2", "rua bbbb"));
+        clienteRepository.save(new Cliente(null, "Mario", "rua ccc"));
+    }
     @GetMapping("/listarClientes")
     public List<Cliente> listarClientes() {
-        return listaDeCliente;
+        return clienteRepository.findAll();
     }
     
+
     @PostMapping("")
     public Cliente createCliente(@RequestBody/*Constroi com o corpo (json) */ Cliente cliente) {
-
-        listaDeCliente.add(cliente);
-        return cliente;
+        return clienteRepository.save(cliente);
     }
+    // @PostMapping("")
+    // public Cliente createCliente(@RequestBody/*Constroi com o corpo (json) */ Cliente cliente) {
+    //     listaDeCliente.add(cliente);
+    //     return cliente;
+    // }
+
+    
+
     @DeleteMapping("/{id}")
     public String deletarCliente(@PathVariable Long id){
 
-        for (Cliente cliente : listaDeCliente){
+        for (Cliente cliente : clienteRepository.findAll()){
             if(cliente.getId()==id){
-                listaDeCliente.remove(cliente);
+                clienteRepository.deleteById(id);
                 return "Removido";
             }
         }
         return "Nao encontrado ID: "+ id;
     }
+    
+    // @DeleteMapping("/{id}")
+    // public String deletarCliente(@PathVariable Long id){
+
+    //     for (Cliente cliente : listaDeCliente){
+    //         if(cliente.getId()==id){
+    //             listaDeCliente.remove(cliente);
+    //             return "Removido";
+    //         }
+    //     }
+    //     return "Nao encontrado ID: "+ id;
+    // }
 
     @PutMapping("/{id}")
     public String atualizarCliente(@PathVariable Long id, @RequestBody Cliente entity) {
-        for (Cliente cliente : listaDeCliente){
+        for (Cliente cliente : clienteRepository.findAll()){
             if(cliente.getId()==id){
-                cliente.setId(id);
-                cliente.setNome(entity.getNome());
+                clienteRepository.save(cliente);
                 return "Cliente atualizado";
             }
         }
         
         return "ID NAO ENCONTRADO: " + id;
     }
+
+    // @PutMapping("/{id}")
+    // public String atualizarCliente(@PathVariable Long id, @RequestBody Cliente entity) {
+    //     for (Cliente cliente : listaDeCliente){
+    //         if(cliente.getId()==id){
+    //             cliente.setId(id);
+    //             cliente.setNome(entity.getNome());
+    //             return "Cliente atualizado";
+    //         }
+    //     }
+        
+    //     return "ID NAO ENCONTRADO: " + id;
+    // }
 }

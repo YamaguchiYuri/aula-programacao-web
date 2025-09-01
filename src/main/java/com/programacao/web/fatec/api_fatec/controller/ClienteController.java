@@ -31,23 +31,6 @@ public class ClienteController {
     @Autowired
     private ClienteRepository clienteRepository;
 
-    public ClienteController(){
-        listaDeCliente.add(new Cliente(1L, "Coisinho","rua"));
-        Cliente cliente2 = new Cliente();
-        cliente2.setId(2L);
-        cliente2.setNome("Shin");
-        listaDeCliente.add(cliente2);
-
-    }
-    @GetMapping("/testeCliente1") //-> /api/clientes/testeCliente1
-    public String testeCliente() {
-        return "Teste Client";
-    }
-
-    @GetMapping("/testeCliente2/{nome}") //-> /api/clientes/testeCliente2/
-    public String testeCliente2(@PathVariable String nome) {
-        return nome;
-    }
 
     @PostConstruct()
     public void dadosIniciais(){

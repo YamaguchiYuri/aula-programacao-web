@@ -1,5 +1,6 @@
 package com.programacao.web.fatec.api_fatec.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
@@ -48,12 +49,14 @@ public class Cidade {
      * Uma cidade pode ter vários clientes (relacionamento 1:N).
      * mappedBy = "cidade" indica que o campo "cidade" na entidade Cliente
      * é o proprietário do relacionamento.
-     * 
-     * @JsonManagedReference é usado para evitar recursão infinita na serialização JSON.
-     * Este lado do relacionamento será serializado normalmente.
+     *
+     * @JsonIgnoreProperties("cidade") é usado para evitar recursão infinita na serialização JSON.
+     * Esta anotação instrui o Jackson a ignorar o campo "cidade" ao serializar cada objeto Cliente
+     * dentro desta lista, evitando assim referências circulares, já que cada Cliente referencia
+     * de volta esta Cidade.
      */
     @OneToMany(mappedBy = "cidade")
-    @JsonManagedReference
+    @JsonIgnoreProperties({"cidade", "cidade_id", "cidade_nome", "cidade_estado"})
     private List<Cliente> clientes = new ArrayList<>();
 
     /**

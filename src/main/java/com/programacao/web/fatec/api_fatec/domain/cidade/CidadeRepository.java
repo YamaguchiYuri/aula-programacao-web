@@ -6,7 +6,6 @@ import org.springframework.data.repository.query.Param;
 
 import com.programacao.web.fatec.api_fatec.entities.Cidade;
 import com.programacao.web.fatec.api_fatec.entities.Estado;
-
 import java.util.List;
 
 /**
@@ -14,5 +13,19 @@ import java.util.List;
  * Estende JpaRepository para herdar operações CRUD básicas.
  */
 public interface CidadeRepository extends JpaRepository<Cidade, Long> {
+
+    @Query("""
+        select c from Cidade c where lower(c.nome) like lower(:nome)
+        """)
+    List<Cidade> findByNome(@Param ("nome") String nome);
+
+
+    List<Cidade> findByEstado(String estado);
+
+    @Query("""
+            select c from Cidade
+            where (c.id = :id) OR (lower(c.nome) like lower(:nome))
+            """)
+    List<Cidade> findByIdOrNome(@Param("id") Long id, @Param("nome") String nome);
 
 }

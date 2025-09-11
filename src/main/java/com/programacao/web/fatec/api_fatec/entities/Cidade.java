@@ -32,7 +32,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Cidade {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -44,31 +43,64 @@ public class Cidade {
     @Column(nullable = false)
     private Estado estado;
 
-    /**
-     * Lista de clientes associados a esta cidade.
-     * Uma cidade pode ter vários clientes (relacionamento 1:N).
-     * mappedBy = "cidade" indica que o campo "cidade" na entidade Cliente
-     * é o proprietário do relacionamento.
-     *
-     * @JsonIgnoreProperties("cidade") é usado para evitar recursão infinita na serialização JSON.
-     * Esta anotação instrui o Jackson a ignorar o campo "cidade" ao serializar cada objeto Cliente
-     * dentro desta lista, evitando assim referências circulares, já que cada Cliente referencia
-     * de volta esta Cidade.
-     */
     @OneToMany(mappedBy = "cidade")
-    @JsonIgnoreProperties({"cidade", "cidade_id", "cidade_nome", "cidade_estado"})
+    @JsonManagedReference
     private List<Cliente> clientes = new ArrayList<>();
 
-    /**
-     * Construtor para criar uma cidade sem clientes inicialmente.
-     * 
-     * @param id O ID da cidade (pode ser null para novas cidades)
-     * @param nome O nome da cidade
-     * @param estado O estado ao qual a cidade pertence
-     */
     public Cidade(Long id, String nome, Estado estado) {
         this.id = id;
         this.nome = nome;
         this.estado = estado;
     }
 }
+
+
+
+
+// @Entity
+// @Table(name = "cidades")
+// @Getter
+// @Setter
+// @NoArgsConstructor
+// @AllArgsConstructor
+// public class Cidade {
+
+//     @Id
+//     @GeneratedValue(strategy = GenerationType.IDENTITY)
+//     private Long id;
+
+//     @Column(nullable = false, length = 60)
+//     private String nome;
+
+//     @Enumerated(EnumType.STRING)
+//     @Column(nullable = false)
+//     private Estado estado;
+
+//     /**
+//      * Lista de clientes associados a esta cidade.
+//      * Uma cidade pode ter vários clientes (relacionamento 1:N).
+//      * mappedBy = "cidade" indica que o campo "cidade" na entidade Cliente
+//      * é o proprietário do relacionamento.
+//      *
+//      * @JsonIgnoreProperties("cidade") é usado para evitar recursão infinita na serialização JSON.
+//      * Esta anotação instrui o Jackson a ignorar o campo "cidade" ao serializar cada objeto Cliente
+//      * dentro desta lista, evitando assim referências circulares, já que cada Cliente referencia
+//      * de volta esta Cidade.
+//      */
+//     @OneToMany(mappedBy = "cidade")
+//     @JsonIgnoreProperties({"cidade", "cidade_id", "cidade_nome", "cidade_estado"})
+//     private List<Cliente> clientes = new ArrayList<>();
+
+//     /**
+//      * Construtor para criar uma cidade sem clientes inicialmente.
+//      * 
+//      * @param id O ID da cidade (pode ser null para novas cidades)
+//      * @param nome O nome da cidade
+//      * @param estado O estado ao qual a cidade pertence
+//      */
+//     public Cidade(Long id, String nome, Estado estado) {
+//         this.id = id;
+//         this.nome = nome;
+//         this.estado = estado;
+//     }
+// }
